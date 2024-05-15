@@ -35,7 +35,7 @@ exports.registerWithEureka = function (appName, PORT) {
   client.logger.level("debug");
 
   client.start((error) => {
-    console.log(error || "user service registered");
+    console.log(error || "Error user service registered");
   });
 
   function exitHandler(options, exitCode) {

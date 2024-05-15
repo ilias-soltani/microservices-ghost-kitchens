@@ -32,7 +32,7 @@ dbConnection();
 // Set up routers
 const mainPath = "/api/v1";
 
-app.use(`${mainPath}/auth`, authRouter);
+app.use(`${mainPath}`, authRouter);
 
 // Error handling if the route doesn't exist
 app.all("*", (req, res, next) => {
@@ -47,7 +47,7 @@ const server = app.listen(port, () => {
   console.log(`App is running on port: ${port}`);
 });
 
-eurekaHelper.registerWithEureka("ms-authentication", port);
+eurekaHelper.registerWithEureka("authentication-service", port);
 
 // handel promise without catch
 process.on("unhandledRejection", (e) => {
