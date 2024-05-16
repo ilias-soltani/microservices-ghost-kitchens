@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="api-gateway" />
         <module name="product-service" />
+        <module name="ms-formation" />
         <module name="discovery-server" />
       </profile>
     </annotationProcessing>
@@ -17,6 +18,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="api-gateway" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
+      <module name="ms-formation" options="-parameters" />
       <module name="product-service" options="-parameters" />
     </option>
   </component>

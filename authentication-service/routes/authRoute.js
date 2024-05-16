@@ -23,6 +23,10 @@ router.post(
   signupChef
 );
 
+router.get("", (req, res) => {
+  res.send("Hello World!");
+})
+
 router.post("/login/:role", loginValidation, login);
 
 module.exports = router;
