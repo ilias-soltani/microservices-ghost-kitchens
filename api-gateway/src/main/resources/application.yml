@@ -1,0 +1,38 @@
+server:
+  port: 7777
+
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway: TRACE
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8888/eureka
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+
+
+        - id: route1
+          predicates:
+            - Path=/ms-formation/**
+          filters:
+            - RewritePath=/ms-formation/(?<s>.*), /${s}
+          uri: lb://ms-formation
+
+
+        - id: authentication-service-route
+          predicates:
+            - Path=/authentication-service/**
+          filters:
+            - RewritePath=/authentication-service/(?<s>.*), /${s}
+          uri: lb://authentication-service
