@@ -41,6 +41,10 @@ const restaurantSchema = new mongoose.Schema(
         required: true,
       },
     },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
     user: {
       type: mongoose.Schema.ObjectId,
       ref: "User",

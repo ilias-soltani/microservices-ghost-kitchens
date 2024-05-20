@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forget Password</title>
+    <style type="text/css">
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.container {
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* small */
+@media (min-width:768px) {
+    .container {
+        width: 700px;
+    }
+}
+/* Mediem */
+@media (min-width:992px) {
+    .container {
+        width: 700px;
+    }
+}
+/* small */
+@media (min-width:1200px) {
+    .container {
+        width: 700px;
+    }
+}
+a {
+    text-decoration: none;
+}
+body {
+    background-color: #eee;
+}
+
+.topper .container .logo {
+    color: black;
+    size: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: center;
+}
+.topper .main-section .hello {
+    display: flex;
+}
+.topper .main-section img {
+    width: 320px;
+    padding: 20px;
+    justify-content: center;
+    margin: auto;
+    position: relative;
+    justify-content: center;
+    margin: auto;
+
+
+}
+.topper .main-section {
+    border-radius: 30px;
+    padding: 30px;
+    padding-right: 50px;
+    justify-content: center;
+    padding-left: 40px;
+    padding-right: 20px;
+    color: black;
+    position: relative;
+    overflow: hidden;
+
+    align-items: center;
+    box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
+}
+
+.main-section{
+    background-color: white;
+    z-index:-2;
+}
+
+
+.topper .main-section h2 {
+    margin-left: auto;
+    text-align: center;
+    margin-right: auto;
+    padding-right: 10px;
+}
+.topper .main-section .code {
+    margin-left: auto;
+    margin-right: auto;
+    padding-right: 10px;
+    width: 100%;
+    font-size: 20px;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    font-weight: bold;
+}
+.topper .main-section p {
+    text-align: center;
+}
+
+
+
+
+    </style>
+</head>
+<body>
+    <div class="topper">
+        <div class="container">
+
+
+            <div class="main-section">
+                <!-- image -->
+                <div class="hello">
+                    <img src="https://firebasestorage.googleapis.com/v0/b/buy-it-73f61.appspot.com/o/uploads%2Fsrc%2Flock.png?alt=media&token=0e3a11b0-9d0c-4cfb-b022-58bfa92461db" alt="">
+                </div>
+
+                <h2>Action Required: One-Time Verify Email Code</h2>
+                <p>You are receiving this email becuase a request was made for a one-time code that can be used to verify your email.</p>
+                <p>Please enter the following code for verification:</p>
+                <!-- code is in here -->
+                <p class="code">{{code}}</p>
+                <p>if you did not request this change, please ignore it or use <b><a href="mailto:buy.it.production@gmail.com">THIS EMAIL</a></b> to contact us.</p>
+        </div>
+    </div>
+
+</body>
+</html>

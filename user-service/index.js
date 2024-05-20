@@ -9,6 +9,10 @@ const ApiError = require("./utils/apiError");
 const globalErrorMiddleware = require("./middlewares/globalErrorMiddleware");
 const dbConnection = require("./config/database");
 const authRouter = require("./routes/authRoute");
+const jwtRouter = require("./routes/jwtRoute");
+const adminRouter = require("./routes/adminRoute");
+const chefRouter = require("./routes/chefRoute");
+const restaurantRouter = require("./routes/restaurantRoute");
 
 // Configurations
 dotenv.config({ path: ".env" });
@@ -24,7 +28,7 @@ app.options("*", cors());
 app.use(compression());
 
 // Request listener
-if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
+app.use(morgan("dev"));
 
 // Connect to database
 dbConnection();
@@ -33,6 +37,10 @@ dbConnection();
 const mainPath = "/api/v1";
 
 app.use(`${mainPath}`, authRouter);
+app.use(`${mainPath}/jwt`, jwtRouter);
+app.use(`${mainPath}/admin`, adminRouter);
+app.use(`${mainPath}/chef`, chefRouter);
+app.use(`${mainPath}/restaurants`, restaurantRouter);
 
 // Error handling if the route doesn't exist
 app.all("*", (req, res, next) => {
@@ -47,7 +55,7 @@ const server = app.listen(port, () => {
   console.log(`App is running on port: ${port}`);
 });
 
-eurekaHelper.registerWithEureka("authentication-service", port);
+eurekaHelper.registerWithEureka("user-service", port);
 
 // handel promise without catch
 process.on("unhandledRejection", (e) => {

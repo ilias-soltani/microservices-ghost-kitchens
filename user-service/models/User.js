@@ -31,12 +31,26 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    verified: {
+      type: Boolean,
+      default: true,
+    },
+    status: {
+        type: String,
+        enum: ["valid", "pending", "late"],
+        default: "valid",
+    },
+    firstTime: {
+        type: Boolean,
+        default: true,
+    },
     passwordChangedAt: Date,
     passwordRestCode: String,
     passwordRestCodeExpires: Date,
     passwordRestCodeVerified: Boolean,
     verifyEmailCode: String,
     verifyEmailCodeExpires: Date,
+    paymentAt: Date
   },
   { timestamps: true }
 );

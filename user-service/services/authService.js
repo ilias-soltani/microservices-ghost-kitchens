@@ -16,6 +16,7 @@ const generateImageName = (name) => {
   return `${name.toLowerCase().replace(/[\s/]/g, "-")}-${uuidv4()}-logo.webp`;
 };
 
+
 /*
 @desc   Signup
 @route  POST /auth/signup
@@ -74,6 +75,7 @@ exports.signupChef = asyncHandler(async (req, res, next) => {
     email: req.body.email,
     password: req.body.password,
     phoneNumber: req.body.phoneNumber,
+    verified: false,
     role: "chef",
   });
 
@@ -115,3 +117,4 @@ exports.login = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({ data: user, token });
 });
+
