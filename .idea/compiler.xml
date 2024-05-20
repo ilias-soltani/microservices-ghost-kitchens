@@ -7,14 +7,34 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="api-gateway" />
         <module name="product-service" />
+<<<<<<< HEAD
         <module name="category-service" />
+=======
+<<<<<<< HEAD
+        <module name="order-service" />
+=======
+        <module name="ms-formation" />
+        <module name="discovery-server" />
+>>>>>>> 30a0c0d95f59e3fa4fd4fec31cdec00d86d74aba
+>>>>>>> 13dfd3e7e4508f6ce8746a74281ee491b7b3a472
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+<<<<<<< HEAD
       <module name="category-service" options="-parameters" />
+=======
+<<<<<<< HEAD
+      <module name="order-service" options="-parameters" />
+=======
+      <module name="api-gateway" options="-parameters" />
+      <module name="discovery-server" options="-parameters" />
+      <module name="ms-formation" options="-parameters" />
+>>>>>>> 30a0c0d95f59e3fa4fd4fec31cdec00d86d74aba
+>>>>>>> 13dfd3e7e4508f6ce8746a74281ee491b7b3a472
       <module name="product-service" options="-parameters" />
     </option>
   </component>
