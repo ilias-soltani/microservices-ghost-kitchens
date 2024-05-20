@@ -5,13 +5,22 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/product-service/pom.xml" />
+<<<<<<< HEAD
+        <option value="$PROJECT_DIR$/order-service/pom.xml" />
+=======
         <option value="$PROJECT_DIR$/discovery-server/pom.xml" />
         <option value="$PROJECT_DIR$/api-gateway/pom.xml" />
         <option value="$PROJECT_DIR$/ms-formation/pom.xml" />
+>>>>>>> 30a0c0d95f59e3fa4fd4fec31cdec00d86d74aba
       </list>
     </option>
+    <option name="workspaceImportForciblyTurnedOn" value="true" />
   </component>
+<<<<<<< HEAD
+  <component name="ProjectRootManager" version="2" project-jdk-name="17 (3)" project-jdk-type="JavaSDK">
+=======
   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="21" project-jdk-type="JavaSDK">
+>>>>>>> 30a0c0d95f59e3fa4fd4fec31cdec00d86d74aba
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

@@ -9,16 +9,24 @@
         <outputRelativeToContentRoot value="true" />
         <module name="api-gateway" />
         <module name="product-service" />
+<<<<<<< HEAD
+        <module name="order-service" />
+=======
         <module name="ms-formation" />
         <module name="discovery-server" />
+>>>>>>> 30a0c0d95f59e3fa4fd4fec31cdec00d86d74aba
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+<<<<<<< HEAD
+      <module name="order-service" options="-parameters" />
+=======
       <module name="api-gateway" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
       <module name="ms-formation" options="-parameters" />
+>>>>>>> 30a0c0d95f59e3fa4fd4fec31cdec00d86d74aba
       <module name="product-service" options="-parameters" />
     </option>
   </component>
