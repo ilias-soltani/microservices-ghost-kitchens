@@ -30,8 +30,8 @@ public class Product {
     private BigInteger maxQuantity;
     private BigInteger calories;
     private boolean availability;
+    private String idCategory;
 
-   // private boolean ads;
 
 
 

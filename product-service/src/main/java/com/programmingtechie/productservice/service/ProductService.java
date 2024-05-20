@@ -30,6 +30,7 @@ public class ProductService {
                 .img(productRequest.getImg())
                 .calories(productRequest.getCalories())
                 .availability(productRequest.isAvailability())
+                .idCategory(productRequest.getIdCategory())
                 .build();
 
         productRepository.save(product);
@@ -40,6 +41,12 @@ public class ProductService {
         List<Product> products = productRepository.findAll();
 
         return products.stream().map(this::mapToProductResponse).toList();
+    }
+    public ProductResponse getProductById(String productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + productId));
+
+        return mapToProductResponse(product);
     }
 
     private ProductResponse mapToProductResponse(Product product) {
@@ -56,6 +63,35 @@ public class ProductService {
                 .img(product.getImg())
                 .calories(product.getCalories())
                 .availability(product.isAvailability())
+                .idCategory(product.getIdCategory())
                 .build();
     }
+    public void deleteProductById(String productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + productId));
+        productRepository.delete(product);
+        log.info("Product {} is deleted", productId);
+    }
+    public void updateProduct(String productId, ProductRequest productRequest) {
+        Product existingProduct = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + productId));
+
+        // Update fields if they are not null in the request
+        if (productRequest.getName() != null) {
+            existingProduct.setName(productRequest.getName());
+        }
+        if (productRequest.getDescription() != null) {
+            existingProduct.setDescription(productRequest.getDescription());
+        }
+        // Similarly update other fields as needed...
+
+        productRepository.save(existingProduct);
+        log.info("Product {} is updated", productId);
+    }
+    public List<ProductResponse> getProductsByIdCategory(String idCategory) {
+        List<Product> products = productRepository.findByIdCategory(idCategory);
+        return products.stream().map(this::mapToProductResponse).toList();
+    }
+
+
 }

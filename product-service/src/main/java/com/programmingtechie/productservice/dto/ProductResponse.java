@@ -25,4 +25,5 @@ public class ProductResponse {
     private BigInteger maxQuantity;
     private BigInteger calories;
     private boolean availability;
+    private String idCategory;
 }
