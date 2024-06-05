@@ -24,4 +24,5 @@ public class ProductRequest {
     private BigInteger maxQuantity;
     private BigInteger calories;
     private boolean availability;
+    private String idCategory;
 }
