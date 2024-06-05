@@ -44,6 +44,58 @@ const userSchema = new mongoose.Schema(
         type: Boolean,
         default: true,
     },
+
+    nationalCard: {
+        photo: {
+            type: String,
+            trim: true,
+            lowercase: true
+        },
+        cardNumber: {
+            type: String,
+            trim: true,
+        },
+        issuedBy: {
+            type: String,
+            trim: true,
+        },
+        releaseDate: {
+            type: String,
+            trim: true,
+        },
+        expiryDate: {
+            type: String,
+            trim: true,
+        },
+        nationalNumber: {
+            type: String,
+            trim: true,
+        },
+        surname: {
+            type: String,
+            trim: true,
+        },
+        name: {
+            type: String,
+            trim: true,
+        },
+        birthDate: {
+            type: String,
+            trim: true,
+        },
+        sex: {
+            type: String,
+            trim: true,
+        },
+        rh: {
+            type: String,
+            trim: true,
+        },
+        birthPlace: {
+            type: String,
+            trim: true,
+        }
+    },
     passwordChangedAt: Date,
     passwordRestCode: String,
     passwordRestCodeExpires: Date,

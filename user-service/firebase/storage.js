@@ -11,10 +11,10 @@ const app = require("./config.js");
 
 const storage = getStorage(app);
 
-exports.uploadImage = async (bufferArray, image) => {
+exports.uploadImage = async (bufferArray, image, fileName = "restaurants") => {
   const buffer = await sharp(bufferArray).webp({ quality: 90 }).toBuffer();
 
-  const storageRef = ref(storage, `uploads/restaurants/${image}`);
+  const storageRef = ref(storage, `uploads/${fileName}/${image}`);
   const snapshot = await uploadBytesResumable(storageRef, buffer, {
     contentType: "image/webp",
   });

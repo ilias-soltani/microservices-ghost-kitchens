@@ -6,14 +6,23 @@ const User = require("../models/User");
 const Restaurant = require("../models/Restaurant");
 const ApiError = require("../utils/apiError");
 const generateTwtToken = require("../utils/jwt");
-const { uploadSingleImage } = require("../middlewares/imagesMiddleware");
+const { uploadSingleImage, uploadMixedImages } = require("../middlewares/imagesMiddleware");
 const { uploadImage } = require("../firebase/storage");
 
 // Upload image using multer
-exports.uploadRestaurantImage = uploadSingleImage("logo");
+exports.uploadChefImages = uploadMixedImages([
+  {
+    name: "logo",
+    maxCount: 1,
+  },
+  {
+    name: "photo",
+    maxCount: 1,
+  }
+]);
 
-const generateImageName = (name) => {
-  return `${name.toLowerCase().replace(/[\s/]/g, "-")}-${uuidv4()}-logo.webp`;
+const generateImageName = (name, type = "logo") => {
+  return `${name.toLowerCase().replace(/[\s/]/g, "-")}-${uuidv4()}-${type}.webp`;
 };
 
 
@@ -52,7 +61,9 @@ exports.signup = asyncHandler(async (req, res, next) => {
 @acess  Public 
 */
 exports.signupChef = asyncHandler(async (req, res, next) => {
-  if (!req.file) return next(new ApiError("Restaurant logo is required"));
+  if (!req.files) return next(new ApiError("Images are required"));
+  if (!req.files.logo) return next(new ApiError("Restaurant logo is required"));
+  if (!req.files.photo) return next(new ApiError("Card photo is required"));
 
   // 1-) Check if email is already registered
   const checkEmail = await User.exists({ email: req.body.email });
@@ -70,18 +81,26 @@ exports.signupChef = asyncHandler(async (req, res, next) => {
     return next(new ApiError("Restaurant name already in use", 401));
 
   // 4-) Create a new user
+
+  req.body.nationalCard.photo = await uploadImage(
+      req.files.photo[0].buffer,
+      generateImageName(req.body.nationalCard.surname, "chef"),
+      "chefs"
+  );
+
   const user = await User.create({
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
     phoneNumber: req.body.phoneNumber,
+    nationalCard: req.body.nationalCard,
     verified: false,
     role: "chef",
   });
 
   // 5-) Create restaurant
   req.body.logo = await uploadImage(
-    req.file.buffer,
+    req.files.logo[0].buffer,
     generateImageName(req.body.restaurantName)
   );
 
