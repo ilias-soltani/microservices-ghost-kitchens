@@ -31,6 +31,7 @@ public class Product {
     private BigInteger calories;
     private boolean availability;
     private String idCategory;
+    private boolean validated;
 
 
 

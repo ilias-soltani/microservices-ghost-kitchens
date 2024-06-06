@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -25,4 +26,5 @@ public class ProductRequest {
     private BigInteger calories;
     private boolean availability;
     private String idCategory;
+    private boolean validated= false;
 }
