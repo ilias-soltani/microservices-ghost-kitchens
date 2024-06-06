@@ -4,6 +4,8 @@ import com.programmingtechie.productservice.model.Product;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 public interface ProductRepository extends MongoRepository<Product, String> {
-    List<Product> findByNameContainingIgnoreCase(String name);
-    List<Product> findByIdCategory(String idCategory);
+    List<Product> findByValidatedAndIdCategory(boolean validated, String idCategory);
+    List<Product> findByValidated(boolean validated);
+    List<Product> findByNameIgnoreCaseContainingAndValidated(String name, boolean validated);
+
 }

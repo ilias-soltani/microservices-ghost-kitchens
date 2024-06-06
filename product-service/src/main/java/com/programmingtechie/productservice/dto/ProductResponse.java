@@ -26,4 +26,5 @@ public class ProductResponse {
     private BigInteger calories;
     private boolean availability;
     private String idCategory;
+    private boolean validated;
 }

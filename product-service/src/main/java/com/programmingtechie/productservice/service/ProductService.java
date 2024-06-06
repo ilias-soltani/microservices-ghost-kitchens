@@ -31,6 +31,7 @@ public class ProductService {
                 .calories(productRequest.getCalories())
                 .availability(productRequest.isAvailability())
                 .idCategory(productRequest.getIdCategory())
+                .validated(productRequest.isValidated())
                 .build();
 
         productRepository.save(product);
@@ -64,6 +65,7 @@ public class ProductService {
                 .calories(product.getCalories())
                 .availability(product.isAvailability())
                 .idCategory(product.getIdCategory())
+                .validated(product.isValidated())
                 .build();
     }
     public void deleteProductById(String productId) {
@@ -76,22 +78,48 @@ public class ProductService {
         Product existingProduct = productRepository.findById(productId)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + productId));
 
-        // Update fields if they are not null in the request
-        if (productRequest.getName() != null) {
-            existingProduct.setName(productRequest.getName());
-        }
-        if (productRequest.getDescription() != null) {
-            existingProduct.setDescription(productRequest.getDescription());
-        }
-        // Similarly update other fields as needed...
+        existingProduct.setName(productRequest.getName());
+        existingProduct.setDescription(productRequest.getDescription());
+        existingProduct.setPrice(productRequest.getPrice());
+        existingProduct.setPromoPrice(productRequest.getPromoPrice());
+        existingProduct.setMinTime(productRequest.getMinTime());
+        existingProduct.setMaxTime(productRequest.getMaxTime());
+        existingProduct.setMinQuantity(productRequest.getMinQuantity());
+        existingProduct.setMaxQuantity(productRequest.getMaxQuantity());
+        existingProduct.setImg(productRequest.getImg());
+        existingProduct.setCalories(productRequest.getCalories());
+        existingProduct.setAvailability(productRequest.isAvailability());
+        existingProduct.setIdCategory(productRequest.getIdCategory());
+        existingProduct.setValidated(false);
+
 
         productRepository.save(existingProduct);
         log.info("Product {} is updated", productId);
     }
-    public List<ProductResponse> getProductsByIdCategory(String idCategory) {
-        List<Product> products = productRepository.findByIdCategory(idCategory);
+    public List<ProductResponse> getValidatedProducts() {
+        List<Product> products = productRepository.findByValidated(true); // Query for validated products
         return products.stream().map(this::mapToProductResponse).toList();
     }
 
+    public List<ProductResponse> getUnvalidatedProducts() {
+        List<Product> unvalidatedProducts = productRepository.findByValidated(false);
+        return unvalidatedProducts.stream().map(this::mapToProductResponse).toList();
+    }
+
+    public void validateProduct(String productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + productId));
+        product.setValidated(true);
+        productRepository.save(product);
+        log.info("Product {} is validated", productId);
+    }
+    public List<ProductResponse> getValidatedProductsByIdCategory(String idCategory) {
+        List<Product> products = productRepository.findByValidatedAndIdCategory(true, idCategory);
+        return products.stream().map(this::mapToProductResponse).toList();
+    }
+    public List<ProductResponse> searchProductsByNameIgnoreCaseContaining(String name) {
+        List<Product> products = productRepository.findByNameIgnoreCaseContainingAndValidated(name, true); // Query for validated products by name ignoring case
+        return products.stream().map(this::mapToProductResponse).toList();
+    }
 
 }

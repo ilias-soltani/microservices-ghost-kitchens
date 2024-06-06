@@ -29,6 +29,11 @@ public class ProductController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponse> getAllProducts() {
+        return productService.getValidatedProducts();
+    }
+    @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponse> getAll() {
         return productService.getAllProducts();
     }
 
@@ -48,15 +53,27 @@ public class ProductController {
     public void updateProduct(@PathVariable String productId, @RequestBody ProductRequest productRequest) {
         productService.updateProduct(productId, productRequest);
     }
-    @GetMapping("/search")
-    @ResponseStatus(HttpStatus.OK)
-    public List<Product> searchProductsByName(@RequestParam String name) {
-        return productRepository.findByNameContainingIgnoreCase(name);
-    }
+
     @GetMapping("/searchByIdCategory")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponse> searchProductsByIdCategory(@RequestParam String idCategory) {
-        return productService.getProductsByIdCategory(idCategory);
+        return productService.getValidatedProductsByIdCategory(idCategory);
+    }
+
+    @GetMapping("/unvalidated")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponse> getUnvalidatedProducts() {
+        return productService.getUnvalidatedProducts();
+    }
+    @PutMapping("/{productId}/validate")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void validateProduct(@PathVariable String productId) {
+        productService.validateProduct(productId);
+    }
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponse> searchProductsByName(@RequestParam String name) {
+        return productService.searchProductsByNameIgnoreCaseContaining(name);
     }
 
 
