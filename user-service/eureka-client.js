@@ -5,6 +5,7 @@ const eurekaHost =
 const eurekaPort = 8888;
 const hostName = process.env.HOSTNAME || "localhost";
 const ipAddr = "192.168.1.5";
+const eurekaHostName = process.env.EUREKA_HOST || "localhost";
 
 exports.registerWithEureka = function (appName, PORT) {
   const client = new Eureka({
@@ -24,7 +25,7 @@ exports.registerWithEureka = function (appName, PORT) {
     },
     //retry 10 time for 3 minute 20 seconds.
     eureka: {
-      host: eurekaHost,
+      host: eurekaHostName,
       port: eurekaPort,
       servicePath: "/eureka/apps/",
       maxRetries: 10,

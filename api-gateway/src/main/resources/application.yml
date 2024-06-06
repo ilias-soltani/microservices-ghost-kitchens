@@ -30,9 +30,9 @@ spring:
           uri: lb://ms-formation
 
 
-        - id: authentication-service-route
+        - id: user-service-route
           predicates:
-            - Path=/authentication-service/**
+            - Path=/user-service/**
           filters:
-            - RewritePath=/authentication-service/(?<s>.*), /${s}
-          uri: lb://authentication-service
+            - RewritePath=/user-service/(?<s>.*), /${s}
+          uri: lb://user-service

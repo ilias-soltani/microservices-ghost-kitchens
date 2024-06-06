@@ -12,7 +12,17 @@ const ApiFeatures = require("../utils/apiFeatures");
 @acess  Public
 */
 exports.getRestaurants = asyncHandler(async (req, res) => {
-    const apiFeatures = new ApiFeatures(Restaurant.find(), req.query)
+    let query = {}
+    if (req.query.wilaya) {
+        const regex = new RegExp(req.query.wilaya, "i");
+        query = {
+            "address.wilaya": {
+                $regex: regex
+            }
+        };
+        delete req.query.wilaya;
+    }
+    const apiFeatures = new ApiFeatures(Restaurant.find(query), req.query)
         .filter()
         .search()
         .sort()

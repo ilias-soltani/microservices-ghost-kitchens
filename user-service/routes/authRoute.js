@@ -4,7 +4,7 @@ const {
   signup,
   login,
   signupChef,
-  uploadRestaurantImage,
+  uploadChefImages,
 } = require("../services/authService");
 const {
   signupValidation,
@@ -18,7 +18,7 @@ router.post("/signup", signupValidation, signup);
 
 router.post(
   "/signup/chef",
-  uploadRestaurantImage,
+    uploadChefImages,
   signupChefValidation,
   signupChef
 );
