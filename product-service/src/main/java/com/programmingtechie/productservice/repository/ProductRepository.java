@@ -7,5 +7,6 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     List<Product> findByValidatedAndIdCategory(boolean validated, String idCategory);
     List<Product> findByValidated(boolean validated);
     List<Product> findByNameIgnoreCaseContainingAndValidated(String name, boolean validated);
-
+    List<Product> findByWilayaAndValidated(String wilaya, boolean validated);
+    List<Product> findByIdChef(String idChef);
 }

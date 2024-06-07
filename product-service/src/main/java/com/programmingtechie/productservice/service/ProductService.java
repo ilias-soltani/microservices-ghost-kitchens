@@ -17,7 +17,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public void createProduct(ProductRequest productRequest) {
+    public void createProduct(ProductRequest productRequest, String idChef) {
         Product product = Product.builder()
                 .name(productRequest.getName())
                 .description(productRequest.getDescription())
@@ -32,6 +32,8 @@ public class ProductService {
                 .availability(productRequest.isAvailability())
                 .idCategory(productRequest.getIdCategory())
                 .validated(productRequest.isValidated())
+                .wilaya(productRequest.getWilaya())
+                .idChef(idChef)
                 .build();
 
         productRepository.save(product);
@@ -66,6 +68,8 @@ public class ProductService {
                 .availability(product.isAvailability())
                 .idCategory(product.getIdCategory())
                 .validated(product.isValidated())
+                .idChef(product.getIdChef())
+                .wilaya(product.getWilaya())
                 .build();
     }
     public void deleteProductById(String productId) {
@@ -90,6 +94,7 @@ public class ProductService {
         existingProduct.setCalories(productRequest.getCalories());
         existingProduct.setAvailability(productRequest.isAvailability());
         existingProduct.setIdCategory(productRequest.getIdCategory());
+        existingProduct.setWilaya(productRequest.getWilaya());
         existingProduct.setValidated(false);
 
 
@@ -117,9 +122,23 @@ public class ProductService {
         List<Product> products = productRepository.findByValidatedAndIdCategory(true, idCategory);
         return products.stream().map(this::mapToProductResponse).toList();
     }
+    public List<ProductResponse> getProductsByIdChef(String idChef) {
+        List<Product> products = productRepository.findByIdChef(idChef);
+        return products.stream().map(this::mapToProductResponse).toList();
+    }
     public List<ProductResponse> searchProductsByNameIgnoreCaseContaining(String name) {
         List<Product> products = productRepository.findByNameIgnoreCaseContainingAndValidated(name, true); // Query for validated products by name ignoring case
         return products.stream().map(this::mapToProductResponse).toList();
+    }
+    public List<ProductResponse> searchProductsByWilayaAndValide(String wilaya) {
+        List<Product> products = productRepository.findByWilayaAndValidated(wilaya, true); // Query for validated products by name ignoring case
+        return products.stream().map(this::mapToProductResponse).toList();
+    }
+    public void updateProductAvailability(String productId, boolean availability) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        product.setAvailability(availability);
+        productRepository.save(product);
     }
 
 }
