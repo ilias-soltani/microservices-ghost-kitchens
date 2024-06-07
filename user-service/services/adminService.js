@@ -86,7 +86,17 @@ exports.getUsers = asyncHandler(async (req, res) => {
             req.query.paymentAt[key] = new Date(req.query.paymentAt[key])
         }
     }
-    const apiFeatures = new ApiFeatures(User.find(), req.query)
+    let query = {}
+    if (req.query.wilaya) {
+        const regex = new RegExp(req.query.wilaya, "i");
+        query = {
+            wilaya: {
+                $regex: regex
+            }
+        };
+        delete req.query.wilaya;
+    }
+    const apiFeatures = new ApiFeatures(User.find(query), req.query)
         .filter()
         .search()
         .sort()

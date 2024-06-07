@@ -7,14 +7,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-
         <module name="category-service" />
         <module name="discovery-server" />
-        <module name="order-service" />
         <module name="payment-service" />
         <module name="api-gateway" />
         <module name="ms-formation" />
         <module name="product-service" />
+        <module name="order-service" />
         <module name="wishlist-service" />
       </profile>
     </annotationProcessing>

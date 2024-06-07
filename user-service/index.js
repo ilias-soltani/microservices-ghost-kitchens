@@ -13,6 +13,7 @@ const jwtRouter = require("./routes/jwtRoute");
 const adminRouter = require("./routes/adminRoute");
 const chefRouter = require("./routes/chefRoute");
 const restaurantRouter = require("./routes/restaurantRoute");
+const agencyRouter = require("./routes/agencyRoute");
 
 // Configurations
 dotenv.config({ path: ".env" });
@@ -41,6 +42,7 @@ app.use(`${mainPath}/jwt`, jwtRouter);
 app.use(`${mainPath}/admin`, adminRouter);
 app.use(`${mainPath}/chef`, chefRouter);
 app.use(`${mainPath}/restaurants`, restaurantRouter);
+app.use(`${mainPath}/agency`, agencyRouter);
 
 // Error handling if the route doesn't exist
 app.all("*", (req, res, next) => {

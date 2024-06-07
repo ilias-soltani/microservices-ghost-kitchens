@@ -44,7 +44,11 @@ const userSchema = new mongoose.Schema(
         type: Boolean,
         default: true,
     },
-
+    wilaya: {
+        type: String,
+        trim: true,
+        lowercase: true,
+    },
     nationalCard: {
         photo: {
             type: String,

@@ -37,3 +37,21 @@ exports.getRestaurants = asyncHandler(async (req, res) => {
 
     res.status(200).json({ pagination, data: restaurants });
 });
+
+
+/*
+@desc   Get Restaurant By ID
+@route  GET /restaurants/:id
+@acess  Public
+*/
+exports.getRestaurant = asyncHandler(async (req, res, next) => {
+    const id = req.params.id;
+
+    const restaurant = await Restaurant.findById(id);
+
+    if(!restaurant) return next(new ApiError("Restaurant not found", 404));
+
+
+
+    res.status(200).json({ data: restaurant });
+});
