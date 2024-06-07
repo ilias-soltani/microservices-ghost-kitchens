@@ -56,3 +56,19 @@ spring:
           filters:
             - RewritePath=/user-service/(?<s>.*), /${s}
           uri: lb://user-service
+
+
+        - id: order-service-route
+          predicates:
+            - Path=/order-service/**
+          filters:
+            - RewritePath=/order-service/(?<s>.*), /${s}
+          uri: lb://order-service
+
+
+        - id: payment-service-route
+          predicates:
+            - Path=/payment-service/**
+          filters:
+            - RewritePath=/payment-service/(?<s>.*), /${s}
+          uri: lb://payment-service
