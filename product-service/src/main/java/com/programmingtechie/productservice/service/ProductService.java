@@ -130,8 +130,8 @@ public class ProductService {
         List<Product> products = productRepository.findByNameIgnoreCaseContainingAndValidated(name, true); // Query for validated products by name ignoring case
         return products.stream().map(this::mapToProductResponse).toList();
     }
-    public List<ProductResponse> searchProductsByWilayaAndValide(String wilaya) {
-        List<Product> products = productRepository.findByWilayaAndValidated(wilaya, true); // Query for validated products by name ignoring case
+    public List<ProductResponse> searchProductsByWilaya(String wilaya) {
+        List<Product> products = productRepository.findByWilayaAndValidated(wilaya, true);
         return products.stream().map(this::mapToProductResponse).toList();
     }
     public void updateProductAvailability(String productId, boolean availability) {
