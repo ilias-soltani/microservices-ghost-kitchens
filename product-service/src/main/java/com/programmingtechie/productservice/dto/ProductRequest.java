@@ -24,7 +24,8 @@ public class ProductRequest {
     private BigInteger minQuantity;
     private BigInteger maxQuantity;
     private BigInteger calories;
-    private boolean availability;
+    private boolean availability= true;
     private String idCategory;
     private boolean validated= false;
+    private String wilaya;
 }

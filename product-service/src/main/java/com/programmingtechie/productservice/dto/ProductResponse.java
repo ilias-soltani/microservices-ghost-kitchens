@@ -27,4 +27,6 @@ public class ProductResponse {
     private boolean availability;
     private String idCategory;
     private boolean validated;
+    private String idChef;
+    private String wilaya;
 }

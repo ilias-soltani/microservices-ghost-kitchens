@@ -29,6 +29,26 @@ spring:
             - RewritePath=/ms-formation/(?<s>.*), /${s}
           uri: lb://ms-formation
 
+        - id: route2
+          predicates:
+            - Path=/product-service/**
+          filters:
+            - RewritePath=/product-service/(?<s>.*), /${s}
+          uri: lb://product-service
+
+        - id: route3
+          predicates:
+            - Path=/category-service/**
+          filters:
+            - RewritePath=/category-service/(?<s>.*), /${s}
+          uri: lb://category-service
+
+        - id: route4
+          predicates:
+            - Path=/wishlist-service/**
+          filters:
+            - RewritePath=/wishlist-service/(?<s>.*), /${s}
+          uri: lb://wishlist-service
 
         - id: user-service-route
           predicates:
