@@ -101,6 +101,7 @@ public class ProductController {
         return productService.searchProductsByNameIgnoreCaseContaining(name);
     }
 
+
     @GetMapping("/searchByWilaya")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponse> searchProductsByWilaya(@RequestParam String wilaya) {

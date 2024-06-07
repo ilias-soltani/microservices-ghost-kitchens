@@ -35,6 +35,35 @@ exports.signupValidation = [
   validationMiddelware,
 ];
 
+exports.createAgencyValidation = [
+    check("name")
+        .notEmpty()
+        .withMessage("Name is required")
+        .isLength({ min: 2 })
+        .withMessage("Name is too short")
+        .isLength({ max: 32 })
+        .withMessage("User name is too long"),
+    check("email")
+        .notEmpty()
+        .withMessage("User email is required")
+        .isEmail()
+        .withMessage("Please entre valid email"),
+    check("password")
+        .notEmpty()
+        .withMessage("User password is required")
+        .isLength({ min: 8 })
+        .withMessage("User password should be at least 8 characters"),
+    check("phoneNumber")
+        .notEmpty()
+        .withMessage("User phone number is required")
+        .isMobilePhone("ar-DZ")
+        .withMessage("Please entre valid phone number"),
+    check("wilaya")
+        .notEmpty()
+        .withMessage("Wilaya is required"),
+    validationMiddelware,
+];
+
 exports.signupChefValidation = [
   check("name")
     .notEmpty()
@@ -92,4 +121,10 @@ exports.loginValidation = [
       return true;
     }),
   validationMiddelware,
+];
+
+
+exports.getUserValidation = [
+    check("id").isMongoId().withMessage("Please entre a valid user id"),
+    validationMiddelware,
 ];

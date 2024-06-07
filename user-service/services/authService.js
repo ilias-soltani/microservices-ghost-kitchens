@@ -137,3 +137,21 @@ exports.login = asyncHandler(async (req, res, next) => {
   res.status(200).json({ data: user, token });
 });
 
+/*
+@desc   Get User By ID
+@route  GET /user/:id
+@acess  Public
+*/
+exports.getUser = asyncHandler(async (req, res, next) => {
+  const id = req.params.id;
+
+  const user = await User.findById(id);
+
+  if(!user) return next(new ApiError("User not found", 404));
+
+
+
+  res.status(200).json({ data: user });
+});
+
+
