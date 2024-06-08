@@ -1,5 +1,6 @@
 package com.example.orderservice.entities;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,8 +45,8 @@ public class Cart {
         for (Product p : products) {
             if (p.getId().equals(product.getId())) {
                 p.setQuantity(product.getQuantity());
-                p.setUnitPrice(product.getUnitPrice());
-                p.setTotalPrice(product.getQuantity() * product.getUnitPrice());
+                p.setPrice(product.getPrice());
+                p.setTotalPrice(product.getPrice().multiply(BigDecimal.valueOf(product.getQuantity())));
                 break;
             }
         }

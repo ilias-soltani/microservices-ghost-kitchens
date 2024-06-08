@@ -3,9 +3,13 @@ package com.example.orderservice.controller;
 import java.util.Optional;
 
 
+import com.example.orderservice.DTO.AddProductRequest;
+import com.example.orderservice.DTO.UpdateProductRequest;
 import com.example.orderservice.authntication.AuthProxy;
 import com.example.orderservice.authntication.VerifyTokenRequest;
 import com.example.orderservice.authntication.VerifyTokenResponse;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,48 +28,69 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<Cart> getCartByUserId(@PathVariable String userId,@RequestHeader("Authorization") String token) {
+    @GetMapping
+    public ResponseEntity<Cart> getCartByUserId(@RequestHeader("Authorization") String token) {
         VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"client"}));
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode responseBody = objectMapper.valueToTree(response.getUser());
+        String userId = responseBody.get("_id").asText();
         Optional<Cart> cart = cartService.getCartByUserId(userId);
         return cart.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/{userId}/products")
-    public ResponseEntity<Cart> addProductToCart(@PathVariable String userId, @RequestBody Product product,@RequestHeader("Authorization") String token) {
+    @PostMapping("/products")
+    public ResponseEntity<?> addProductToCart(@RequestBody AddProductRequest addProductRequest,@RequestHeader("Authorization") String token) {
         VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"client"}));
-        cartService.addProductToCart(userId, product);
-        return ResponseEntity.ok(cartService.getCartByUserId(userId).get());
-    }
-
-    @PutMapping("/{userId}/products")
-    public ResponseEntity<?> updateProductInCart(@PathVariable String userId, @RequestBody Product product,@RequestHeader("Authorization") String token) {
-        VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"client"}));
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode responseBody = objectMapper.valueToTree(response.getUser());
+        String userId = responseBody.get("_id").asText();
         try {
-            cartService.updateProductInCart(userId, product);
-            return ResponseEntity.ok(cartService.getCartByUserId(userId).get());
+            cartService.addProductToCart(userId, addProductRequest.getProductId(), addProductRequest.getQuantity());
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/{userId}/products/{productId}")
-    public ResponseEntity<Cart> removeProductFromCart(@PathVariable String userId, @PathVariable String productId,@RequestHeader("Authorization") String token) {
+    @PutMapping("/products/{productId}")
+    public ResponseEntity<?> updateProductInCart(@PathVariable String productId, @RequestBody UpdateProductRequest updateProductRequest,@RequestHeader("Authorization") String token) {
         VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"client"}));
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode responseBody = objectMapper.valueToTree(response.getUser());
+        String userId = responseBody.get("_id").asText();
+        try {
+            cartService.updateProductInCart(userId, productId, updateProductRequest.getQuantity());
+            return ResponseEntity.ok(cartService.getCartByUserId(userId).get());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @DeleteMapping("/products/{productId}")
+    public ResponseEntity<Cart> removeProductFromCart( @PathVariable String productId,@RequestHeader("Authorization") String token) {
+        VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"client"}));
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode responseBody = objectMapper.valueToTree(response.getUser());
+        String userId = responseBody.get("_id").asText();
         cartService.removeProductFromCart(userId, productId);
         return ResponseEntity.ok(cartService.getCartByUserId(userId).get());
     }
 
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteCart(@PathVariable String userId,@RequestHeader("Authorization") String token) {
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCart(@RequestHeader("Authorization") String token) {
         VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"client"}));
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode responseBody = objectMapper.valueToTree(response.getUser());
+        String userId = responseBody.get("_id").asText();
         cartService.deleteCart(userId);
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{userId}/checkout")
-    public ResponseEntity<Void> checkout(@PathVariable String userId,@RequestHeader("Authorization") String token) {
+    @PostMapping("/checkout")
+    public ResponseEntity<Void> checkout(@RequestHeader("Authorization") String token) {
         VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"client"}));
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode responseBody = objectMapper.valueToTree(response.getUser());
+        String userId = responseBody.get("_id").asText();
         cartService.checkout(userId);
         return ResponseEntity.ok().build();
     }

@@ -1,13 +1,11 @@
-package com.example.paymentservice.DTO;
+package com.example.orderservice.DTO;
+
+
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,6 +22,6 @@ public class OrderDTO {
     private BigDecimal totalPrice;
     private boolean isGrouped;
     private String chefId;
-    private String agenceId;
-    private String statusAgence;
+    private String statusChef;
+
 }

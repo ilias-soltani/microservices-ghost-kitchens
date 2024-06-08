@@ -3,7 +3,6 @@ package com.example.paymentservice.service;
 import com.example.paymentservice.entities.Order;
 import com.example.paymentservice.repository.OrderRepository;
 import com.example.paymentservice.DTO.OrderDTO;
-import com.example.paymentservice.DTO.ProductDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +23,17 @@ public class OrderService {
         order.setProducts(orderDTO.getProducts());
         order.setTotalPrice(orderDTO.getTotalPrice());
         order.setCreatedAt(LocalDateTime.now());
-        order.setGrouped(orderDTO.isGrouped()); // Indique qu'il s'agit d'une commande groupée ou individuelle
+        order.setGrouped(orderDTO.isGrouped());
         order.setChefId(orderDTO.getChefId());
+        order.setAgenceId(orderDTO.getAgenceId());
+        order.setStatusAgence(orderDTO.getStatusAgence());
+        updateStatusOfOrder(order);
         return orderRepository.save(order);
     }
 
     public List<Order> getOrdersByUserId(String userId) {
         return orderRepository.findByUserId(userId).stream()
-                .filter(Order::isGrouped) // Filtrez les commandes groupées
+                .filter(Order::isGrouped)
                 .collect(Collectors.toList());
     }
 
@@ -39,30 +41,94 @@ public class OrderService {
         return orderRepository.findByUserIdAndIsGroupedTrue(userId);
     }
 
-
     public Order updateOrder(String orderId, OrderDTO orderDTO) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
         if (optionalOrder.isPresent()) {
             Order order = optionalOrder.get();
             order.setProducts(orderDTO.getProducts());
             order.setTotalPrice(orderDTO.getTotalPrice());
+            updateStatusOfOrder(order);
             return orderRepository.save(order);
         }
         throw new RuntimeException("Order not found");
     }
 
-    public List<Order> getOrdersByChefId(String chefId) { // Ajoutez cette méthode
+    public List<Order> getOrdersByChefId(String chefId) {
         return orderRepository.findByChefId(chefId);
     }
 
-
-    public Order updateOrderStatus(String orderId, String status) {
+    public Order updateOrderStatus(String orderId, String statusChef) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
         if (optionalOrder.isPresent()) {
             Order order = optionalOrder.get();
-            order.setStatus(status);
+            order.setStatusChef(statusChef);
+            if ("rejected".equals(statusChef)) {
+                order.setAgenceId(null);
+                order.setStatusAgence(null);
+            }
+            updateStatusOfOrder(order);
             return orderRepository.save(order);
         }
         return null;
     }
+
+    public Order updateAgenceId(String orderId, String agenceId) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+            order.setAgenceId(agenceId);
+            updateStatusOfOrder(order);
+            return orderRepository.save(order);
+        }
+        throw new RuntimeException("Order not found");
+    }
+
+    public Order updateStatusAgence(String orderId, String statusAgence) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+            order.setStatusAgence(statusAgence);
+            updateStatusOfOrder(order);
+            return orderRepository.save(order);
+        }
+        throw new RuntimeException("Order not found");
+    }
+
+    private void updateStatusOfOrder(Order order) {
+        if ("rejected".equals(order.getStatusChef())) {
+            order.setStatusOfOrder("rejected");
+        } else if ("valid".equals(order.getStatusChef()) && "valid".equals(order.getStatusAgence())) {
+            order.setStatusOfOrder("approved");
+        } else {
+            order.setStatusOfOrder("invalid");
+        }
+    }
+
+    public void deleteOrdersByUserId(String userId) {  // New method
+        orderRepository.deleteByUserId(userId);
+
+    }
+
+    public void deleteOrdersByChefId(String chefId) {  // New method
+        orderRepository.deleteByChefId(chefId);
+    }
+
+    public Optional<Order> getOrderById(String orderId) {
+        return orderRepository.findById(orderId);
+    }
+
+    public List<Order> getOrdersByAgenceId(String agenceId) {
+        return orderRepository.findByAgenceId(agenceId);
+    }
+
+    public List<Order> getNonGroupedOrdersByStatusOrderForUser(String userId, String statusOrder) {
+        return orderRepository.findByUserIdAndStatusOfOrderAndIsGroupedFalse(userId, statusOrder);
+    }
+
+    public List<Order> getNonGroupedOrdersByUserId(String userId) { // New method
+        return orderRepository.findByUserIdAndIsGroupedFalse(userId);
+    }
+
+
+
 }

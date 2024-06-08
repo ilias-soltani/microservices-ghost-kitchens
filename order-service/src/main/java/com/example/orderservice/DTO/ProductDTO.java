@@ -1,4 +1,4 @@
-package com.example.paymentservice.entities;
+package com.example.orderservice.DTO;
 
 import lombok.*;
 
@@ -9,12 +9,12 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @ToString
-public class Product {
+public class ProductDTO {
     private String id;
     private String name;
-    private BigDecimal unitPrice;
+    private BigDecimal price;
     private int quantity;
     private BigDecimal totalPrice;
-    private String chefId;
+    private String idChef;
     private String imageUrl;
 }
