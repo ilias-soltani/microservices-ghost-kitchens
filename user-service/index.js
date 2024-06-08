@@ -22,8 +22,8 @@ const app = express();
 app.use(express.json());
 
 // Enable other domains to access this api
-app.use(cors());
-app.options("*", cors());
+// app.use(cors());
+// app.options("*", cors());
 
 // Commprese all requests
 app.use(compression());

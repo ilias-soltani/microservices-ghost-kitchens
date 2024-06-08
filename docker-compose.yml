@@ -12,7 +12,7 @@ services:
 
   ## Api Gateway Server
   api-gateway:
-    image: apigateway-image
+    image: api-gateway-image
     depends_on:
       - discovery-server
     container_name: api-gateway
@@ -69,3 +69,40 @@ services:
       profile: "default"
       eureka.client.serviceUrl.defaultZone: "http://discovery-server:8888/eureka"
 
+
+  ## Category Service Server
+  category-service:
+    build: /category-service/
+    image: category-image
+    container_name: category-service
+    depends_on:
+      - discovery-server
+      - api-gateway
+    environment:
+      profile: "default"
+      eureka.client.serviceUrl.defaultZone: "http://discovery-server:8888/eureka"
+
+  ## Product Service Server
+  product-service:
+    build: /product-service/
+    image: product-image
+    container_name: product-service
+    depends_on:
+      - discovery-server
+      - api-gateway
+    environment:
+      profile: "default"
+      eureka.client.serviceUrl.defaultZone: "http://discovery-server:8888/eureka"
+
+
+  ## Wishlist Service Server
+  wishlist-service:
+    build: /wishlist-service/
+    image: wishlist-image
+    container_name: wishlist-service
+    depends_on:
+      - discovery-server
+      - api-gateway
+    environment:
+      profile: "default"
+      eureka.client.serviceUrl.defaultZone: "http://discovery-server:8888/eureka"

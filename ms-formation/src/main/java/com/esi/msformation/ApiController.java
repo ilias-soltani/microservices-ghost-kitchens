@@ -35,4 +35,9 @@ public class ApiController {
 
         return ResponseEntity.ok(userId);
     }
+
+    @GetMapping()
+    public String sayHi() {
+        return "Hello World!";
+    }
 }
