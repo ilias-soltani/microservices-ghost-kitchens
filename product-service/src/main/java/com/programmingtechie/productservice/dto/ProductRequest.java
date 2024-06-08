@@ -20,7 +20,6 @@ public class ProductRequest {
     private BigDecimal promoPrice;
     private String minTime;
     private String maxTime;
-    private String img;
     private BigInteger minQuantity;
     private BigInteger maxQuantity;
     private BigInteger calories;
@@ -28,4 +27,5 @@ public class ProductRequest {
     private String idCategory;
     private boolean validated= false;
     private String wilaya;
+    private String imageUrl;
 }

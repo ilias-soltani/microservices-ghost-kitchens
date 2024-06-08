@@ -25,7 +25,6 @@ public class Product {
     private BigDecimal promoPrice;
     private String minTime;
     private String maxTime;
-    private String img;
     private BigInteger minQuantity;
     private BigInteger maxQuantity;
     private BigInteger calories;
@@ -33,6 +32,7 @@ public class Product {
     private String idCategory;
     private boolean validated;
     private String idChef;
+    private String imageUrl;
     private String wilaya;
 
 

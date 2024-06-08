@@ -8,16 +8,16 @@ import com.programmingtechie.productservice.authntication.VerifyTokenResponse;
 import com.programmingtechie.productservice.dto.ProductAvailabilityRequest;
 import com.programmingtechie.productservice.dto.ProductRequest;
 import com.programmingtechie.productservice.dto.ProductResponse;
-import com.programmingtechie.productservice.model.Product;
 import com.programmingtechie.productservice.repository.ProductRepository;
 import com.programmingtechie.productservice.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/product")
@@ -29,15 +29,22 @@ public class ProductController {
     @Autowired
     AuthProxy authProxy;
 
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createProduct(@RequestBody ProductRequest productRequest,@RequestHeader("Authorization") String token) {
+    public void createProduct(@RequestPart("product") String productJson,
+                              @RequestPart(value = "imageFile",required = false) MultipartFile imageFile,
+                              @RequestHeader("Authorization") String token) throws IOException {
         VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"chef"}));
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode responseBody = objectMapper.valueToTree(response.getUser());
         String userId = responseBody.get("_id").asText();
-        productService.createProduct(productRequest,userId);
+
+        ProductRequest productRequest = objectMapper.readValue(productJson, ProductRequest.class);
+        productService.createProduct(productRequest, imageFile,userId);
     }
+
+
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -64,10 +71,17 @@ public class ProductController {
         productService.deleteProductById(productId);
     }
     @PatchMapping("/{productId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateProduct(@PathVariable String productId, @RequestBody ProductRequest productRequest,@RequestHeader("Authorization") String token) {
+    @ResponseStatus(HttpStatus.OK)
+    public void updateProduct(@PathVariable String productId,
+                              @RequestPart("product") String productJson,
+                              @RequestPart(value = "imageFile",required = false) MultipartFile imageFile,
+                              @RequestHeader("Authorization") String token) throws IOException {
         VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"chef"}));
-        productService.updateProduct(productId, productRequest);
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode responseBody = objectMapper.valueToTree(response.getUser());
+        String userId = responseBody.get("_id").asText();
+        ProductRequest productRequest = objectMapper.readValue(productJson, ProductRequest.class);
+        productService.updateProduct(productId, productRequest, imageFile);
     }
 
     @GetMapping("/searchByIdCategory")
