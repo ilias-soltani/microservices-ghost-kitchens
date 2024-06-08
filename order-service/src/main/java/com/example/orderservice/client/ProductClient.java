@@ -1,4 +1,4 @@
-package com.programmingtechie.wishlistservice.client;
+package com.example.orderservice.client;
 
 import lombok.Data;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -17,9 +17,8 @@ public interface ProductClient {
     class ProductResponse {
         private String id;
         private String name;
-        private String description;
         private BigDecimal price;
+        private String IdChef;
         private String imageUrl;
-        private boolean validated;
     }
 }

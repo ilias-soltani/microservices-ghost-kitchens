@@ -29,4 +29,5 @@ public class ProductResponse {
     private boolean validated;
     private String idChef;
     private String wilaya;
+    private String imageUrl;
 }

@@ -46,16 +46,26 @@ public class WishlistService {
 
     public Wishlist addItemToWishlist(String userId, String productId) {
         ProductClient.ProductResponse product = productClient.getProductById(productId);
+        Wishlist wishlist = getOrCreateWishlist(userId);
+
+        // Check if the product is already in the wishlist
+        boolean productExists = wishlist.getItems().stream()
+                .anyMatch(item -> item.getProductId().equals(productId));
+
+        if (productExists) {
+            return wishlist;
+        }
+
 
         WishlistItem item = WishlistItem.builder()
                 .productId(product.getId())
                 .name(product.getName())
-                .image(product.getImg())
+                .imageUrl(product.getImageUrl())
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .build();
 
-        Wishlist wishlist = getOrCreateWishlist(userId);
+
         wishlist.getItems().add(item);
         wishlistRepository.save(wishlist);
         return wishlist;
