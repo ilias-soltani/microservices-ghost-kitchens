@@ -178,16 +178,16 @@ public class ProductService {
         productRepository.save(product);
         log.info("Product {} is validated", productId);
     }
-    public List<ProductResponse> getValidatedProductsByIdCategory(String idCategory) {
-        List<Product> products = productRepository.findByValidatedAndIdCategory(true, idCategory);
+    public List<ProductResponse> getValidatedProductsByIdCategory(String idCategory,String wilaya) {
+        List<Product> products = productRepository.findByValidatedAndIdCategoryAndWilaya(true, idCategory,wilaya);
         return products.stream().map(this::mapToProductResponse).toList();
     }
     public List<ProductResponse> getProductsByIdChef(String idChef) {
         List<Product> products = productRepository.findByIdChef(idChef);
         return products.stream().map(this::mapToProductResponse).toList();
     }
-    public List<ProductResponse> searchProductsByNameIgnoreCaseContaining(String name) {
-        List<Product> products = productRepository.findByNameIgnoreCaseContainingAndValidated(name, true); // Query for validated products by name ignoring case
+    public List<ProductResponse> searchProductsByNameIgnoreCaseContaining(String name, String wilaya) {
+        List<Product> products = productRepository.findByNameIgnoreCaseContainingAndValidatedAndWilaya(name, true,wilaya); // Query for validated products by name ignoring case
         return products.stream().map(this::mapToProductResponse).toList();
     }
     public List<ProductResponse> searchProductsByWilaya(String wilaya) {
@@ -200,5 +200,11 @@ public class ProductService {
         product.setAvailability(availability);
         productRepository.save(product);
     }
+
+    public List<ProductResponse> getProductsByIdChefAndNameIgnoreCaseContaining(String idChef,String name) {
+        List<Product> products = productRepository.findByIdChefAndNameIgnoreCaseContaining(idChef,name);
+        return products.stream().map(this::mapToProductResponse).toList();
+    }
+
 
 }

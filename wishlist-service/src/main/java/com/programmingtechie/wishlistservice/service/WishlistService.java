@@ -50,7 +50,7 @@ public class WishlistService {
         WishlistItem item = WishlistItem.builder()
                 .productId(product.getId())
                 .name(product.getName())
-                .image(product.getImg())
+                .imageUrl(product.getImageUrl())
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .build();

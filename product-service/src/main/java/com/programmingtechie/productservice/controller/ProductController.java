@@ -86,8 +86,8 @@ public class ProductController {
 
     @GetMapping("/searchByIdCategory")
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponse> searchProductsByIdCategory(@RequestParam String idCategory) {
-        return productService.getValidatedProductsByIdCategory(idCategory);
+    public List<ProductResponse> searchProductsByIdCategory(@RequestParam String idCategory,@RequestParam String wilaya) {
+        return productService.getValidatedProductsByIdCategory(idCategory,wilaya);
     }
 
     @GetMapping("/searchByIdChef")
@@ -95,6 +95,13 @@ public class ProductController {
     public List<ProductResponse> searchProductsByIdChef(@RequestParam String idChef,@RequestHeader("Authorization") String token) {
         VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"chef"}));
         return productService.getProductsByIdChef(idChef);
+    }
+
+    @GetMapping("/searchByIdChefAndName")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponse> searchProductsByIdChefAndName(@RequestParam String idChef,@RequestParam String name,@RequestHeader("Authorization") String token) {
+        VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"chef"}));
+        return productService.getProductsByIdChefAndNameIgnoreCaseContaining(idChef,name);
     }
 
     @GetMapping("/unvalidated")
@@ -111,8 +118,8 @@ public class ProductController {
     }
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponse> searchProductsByName(@RequestParam String name) {
-        return productService.searchProductsByNameIgnoreCaseContaining(name);
+    public List<ProductResponse> searchProductsByName(@RequestParam String name,@RequestParam String wilaya) {
+        return productService.searchProductsByNameIgnoreCaseContaining(name,wilaya);
     }
 
 

@@ -19,7 +19,7 @@ public interface ProductClient {
         private String name;
         private String description;
         private BigDecimal price;
-        private String img;
+        private String imageUrl;
         private boolean validated;
     }
 }

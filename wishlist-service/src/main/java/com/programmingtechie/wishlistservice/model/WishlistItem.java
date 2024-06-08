@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class WishlistItem {
     private String productId;
     private String name;
-    private String image;
+    private String imageUrl;
     private String description;
     private BigDecimal price;
 }
