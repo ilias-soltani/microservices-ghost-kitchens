@@ -46,3 +46,23 @@ exports.createAgency = asyncHandler(async (req, res, next) => {
     res.status(201).json({data: user});
 });
 
+/*
+@desc   Update agency status
+@route  POST /agency/update-agency-status/:id
+@acess  Private:Admin
+*/
+exports.updateAgencyStatus = asyncHandler(async (req, res, next) =>{
+    const agencyId =  req.params.id;
+
+    let updatedValue = {verified: req.body.verified}
+
+    const agency = await User.findOneAndUpdate({_id: agencyId, role: "agency"},
+        updatedValue, {new: true});
+
+    if(!agency) return next(new ApiError("Agency not found!", 404));
+
+
+
+    res.status(200).json({data: agency});
+});
+

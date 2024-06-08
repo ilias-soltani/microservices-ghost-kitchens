@@ -1,11 +1,16 @@
 const express = require("express");
 
 const {
-    createAgency
+    createAgency,
+    updateAgencyStatus
 } = require("../services/agencyService");
 const {
    createAgencyValidation
 } = require("../validations/authValidation");
+
+const {
+    updateChefStatusValidation
+} = require("../validations/adminValidation");
 
 const {
     auth,
@@ -16,5 +21,7 @@ const {
 const router = express.Router();
 
 router.post("/", auth, access("admin"), createAgencyValidation , createAgency);
+
+router.patch("/update-agency-status/:id", auth, access("admin"), updateChefStatusValidation , updateAgencyStatus);
 
 module.exports = router;
