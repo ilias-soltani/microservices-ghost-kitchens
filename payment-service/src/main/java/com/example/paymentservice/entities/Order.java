@@ -1,5 +1,6 @@
 package com.example.paymentservice.entities;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,11 +31,17 @@ public class Order {
     @NotNull(message = "Products are required")
     private List<@NotNull ProductDTO> products;
 
-    private double totalPrice;
+    private BigDecimal totalPrice;
     private LocalDateTime createdAt;
-    private boolean isGrouped;  // pour afficher la commande pour le client
+    private boolean isGrouped;  // Indicates grouped order
 
     @NotNull(message = "Chef ID is required")
     private String chefId;
-    private String status = "invalid";
+    private String statusChef = "invalid";
+    private String agenceId;
+    private String statusAgence;
+
+    private String statusOfOrder;
+
+    private String adresse;
 }

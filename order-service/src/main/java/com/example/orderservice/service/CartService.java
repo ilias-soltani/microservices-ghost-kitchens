@@ -1,16 +1,12 @@
 package com.example.orderservice.service;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.example.orderservice.client.PaymentClient;
+import com.example.orderservice.client.ProductClient;
 import com.example.orderservice.entities.Cart;
 import com.example.orderservice.entities.Product;
 import com.example.orderservice.repository.CartRepository;
-import com.example.paymentservice.DTO.ProductDTO;
-import com.example.paymentservice.DTO.OrderDTO;
-
+import com.example.orderservice.DTO.OrderDTO;
+import com.example.orderservice.DTO.ProductDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -19,6 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 @Service
 public class CartService {
 
@@ -26,7 +27,10 @@ public class CartService {
     private CartRepository cartRepository;
 
     @Autowired
-    private RestTemplate restTemplate;
+    private PaymentClient paymentClient;
+
+    @Autowired
+    private ProductClient productClient;
 
     public Cart saveCart(Cart cart) {
         return cartRepository.save(cart);
@@ -36,23 +40,58 @@ public class CartService {
         return cartRepository.findByUserId(userId);
     }
 
-    public void addProductToCart(String userId, Product product) {
+    public void addProductToCart(String userId, String productId, int quantity) {
         Cart cart = getCartByUserId(userId).orElse(new Cart(userId));
 
+        // Fetch product details from ProductService
+        ProductClient.ProductResponse productDTO = productClient.getProductById(productId);
+        if (productDTO == null) {
+            throw new RuntimeException("Product not found in ProductService");
+        }
+
         Optional<Product> existingProduct = cart.getProducts().stream()
-                .filter(p -> p.getId().equals(product.getId()))
+                .filter(p -> p.getId().equals(productId))
                 .findFirst();
 
         if (existingProduct.isPresent()) {
             Product prod = existingProduct.get();
-            prod.setQuantity(prod.getQuantity() + product.getQuantity());
-            prod.setTotalPrice(prod.getQuantity() * prod.getUnitPrice());
+            prod.setQuantity(prod.getQuantity() + quantity);
+            prod.setTotalPrice(productDTO.getPrice().multiply(BigDecimal.valueOf(prod.getQuantity() ))); // Use getPrice directly
         } else {
-            product.setTotalPrice(product.getQuantity() * product.getUnitPrice());
+            Product product = new Product();
+            product.setId(productDTO.getId());
+            product.setName(productDTO.getName());
+            product.setPrice(productDTO.getPrice()); // Use getPrice directly
+            product.setQuantity(quantity);
+            product.setTotalPrice(productDTO.getPrice().multiply(BigDecimal.valueOf(quantity ))); // Use getPrice directly
+            product.setIdChef(productDTO.getIdChef()); // Assuming ProductDTO contains ChefId
+            product.setImageUrl(productDTO.getImageUrl());
+
             cart.addProduct(product);
         }
 
         saveCart(cart);
+    }
+
+    public void updateProductInCart(String userId, String productId, int quantity) throws Exception {
+        Optional<Cart> optionalCart = getCartByUserId(userId);
+        if (optionalCart.isPresent()) {
+            Cart cart = optionalCart.get();
+            Optional<Product> existingProduct = cart.getProducts().stream()
+                    .filter(p -> p.getId().equals(productId))
+                    .findFirst();
+
+            if (existingProduct.isPresent()) {
+                Product product = existingProduct.get();
+                product.setQuantity(quantity);
+                product.setTotalPrice(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
+                saveCart(cart);
+            } else {
+                throw new Exception("Product not found in the cart");
+            }
+        } else {
+            throw new Exception("Cart not found for user " + userId);
+        }
     }
 
     public void removeProductFromCart(String userId, String productId) {
@@ -68,104 +107,91 @@ public class CartService {
         cartRepository.deleteByUserId(userId);
     }
 
-    public void updateProductInCart(String userId, Product product) throws Exception {
-        Optional<Cart> optionalCart = getCartByUserId(userId);
-        if (optionalCart.isPresent()) {
-            Cart cart = optionalCart.get();
-            Optional<Product> existingProduct = cart.getProducts().stream()
-                    .filter(p -> p.getId().equals(product.getId()))
-                    .findFirst();
 
-            if (existingProduct.isPresent()) {
-                cart.updateProduct(product);
-                saveCart(cart);
-            } else {
-                throw new Exception("Product not found in the cart");
-            }
-        } else {
-            throw new Exception("Cart not found for user " + userId);
-        }
-    }
+    //notif
 
     public void checkout(String userId) {
         Optional<Cart> optionalCart = getCartByUserId(userId);
         if (optionalCart.isPresent()) {
             Cart cart = optionalCart.get();
-            String orderServiceUrl = "http://localhost:8081/api/orders";
 
-            // Séparer les produits par chef
+            // Separate products by chef
             Map<String, List<ProductDTO>> productsByChef = cart.getProducts().stream()
-                    .collect(Collectors.groupingBy(Product::getChefId,
+                    .collect(Collectors.groupingBy(Product::getIdChef,
                             Collectors.mapping(product -> new ProductDTO(
                                     product.getId(),
                                     product.getName(),
-                                    product.getUnitPrice(),
+                                    product.getPrice(),
                                     product.getQuantity(),
                                     product.getTotalPrice(),
-                                    product.getChefId()
+                                    product.getIdChef(),
+                                    product.getImageUrl()
                             ), Collectors.toList())));
 
-            // Pour chaque chef, créer des commandes individuelles
+            // For each chef, create individual orders
             productsByChef.forEach((chefId, productDTOs) -> {
                 OrderDTO order = new OrderDTO();
                 order.setUserId(userId);
                 order.setProducts(productDTOs);
-                order.setTotalPrice(productDTOs.stream().mapToDouble(ProductDTO::getTotalPrice).sum());
-                order.setGrouped(false); // Indique qu'il s'agit d'une commande individuelle
-                order.setChefId(chefId); // Ajoutez cette ligne
-                restTemplate.postForObject(orderServiceUrl, order, OrderDTO.class);
+                order.setTotalPrice(productDTOs.stream()
+                        .map(ProductDTO::getTotalPrice)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add));
+                order.setGrouped(false); // Indicates individual order
+                order.setChefId(chefId); // Set chefId
+                order.setStatusChef("invalide");
+                paymentClient.createOrder(order);
             });
 
-            // Vérifier s'il existe déjà une commande groupée pour cet utilisateur
-            ResponseEntity<List<OrderDTO>> response = restTemplate.exchange(
-                    orderServiceUrl + "/user/" + userId + "/grouped",
-                    HttpMethod.GET,
-                    null,
-                    new ParameterizedTypeReference<List<OrderDTO>>() {}
-            );
-
+            // Check if there is an existing grouped order for this user
+            ResponseEntity<List<OrderDTO>> response = paymentClient.getGroupedOrdersByUserId(userId);
             List<OrderDTO> existingGroupedOrders = response.getBody();
 
             OrderDTO groupedOrder;
             if (existingGroupedOrders != null && !existingGroupedOrders.isEmpty()) {
-                // Mettre à jour l'ordre groupé existant
+                // Update the existing grouped order
                 groupedOrder = existingGroupedOrders.get(0);
                 List<ProductDTO> updatedProducts = groupedOrder.getProducts();
                 updatedProducts.addAll(cart.getProducts().stream()
                         .map(product -> new ProductDTO(
                                 product.getId(),
                                 product.getName(),
-                                product.getUnitPrice(),
+                                product.getPrice(),
                                 product.getQuantity(),
                                 product.getTotalPrice(),
-                                product.getChefId()
+                                product.getIdChef(),
+                                product.getImageUrl()
                         )).collect(Collectors.toList()));
                 groupedOrder.setProducts(updatedProducts);
-                groupedOrder.setTotalPrice(updatedProducts.stream().mapToDouble(ProductDTO::getTotalPrice).sum());
+                groupedOrder.setTotalPrice(updatedProducts.stream()
+                        .map(ProductDTO::getTotalPrice)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add));
 
-                HttpEntity<OrderDTO> requestUpdate = new HttpEntity<>(groupedOrder);
-                restTemplate.exchange(orderServiceUrl + "/" + groupedOrder.getId(), HttpMethod.PUT, requestUpdate, OrderDTO.class);
+                paymentClient.updateOrder(groupedOrder.getId(), groupedOrder);
             } else {
-                // Créer une nouvelle commande groupée
+                // Create a new grouped order
                 groupedOrder = new OrderDTO();
                 groupedOrder.setUserId(userId);
                 groupedOrder.setProducts(cart.getProducts().stream()
                         .map(product -> new ProductDTO(
                                 product.getId(),
                                 product.getName(),
-                                product.getUnitPrice(),
+                                product.getPrice(),
                                 product.getQuantity(),
                                 product.getTotalPrice(),
-                                product.getChefId()
+                                product.getIdChef(),
+                                product.getImageUrl()
                         )).collect(Collectors.toList()));
-                groupedOrder.setTotalPrice(cart.getProducts().stream().mapToDouble(Product::getTotalPrice).sum());
-                groupedOrder.setGrouped(true); // Indique qu'il s'agit d'une commande groupée
-                groupedOrder.setChefId("grouped"); // Utilisez "grouped" pour les commandes groupées
-                restTemplate.postForObject(orderServiceUrl, groupedOrder, OrderDTO.class);
+                groupedOrder.setTotalPrice(cart.getProducts().stream()
+                        .map(Product::getTotalPrice)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add));
+                groupedOrder.setGrouped(true); // Indicates grouped order
+                groupedOrder.setChefId("grouped"); // Use "grouped" for grouped orders
+                paymentClient.createOrder(groupedOrder);
             }
 
-            // Supprimer le panier après le paiement
+            // Delete the cart after checkout
             deleteCart(userId);
         }
     }
 }
+

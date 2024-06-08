@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -12,12 +14,13 @@ import lombok.ToString;
 public class Product {
     private String id;
     private String name;
-    private double unitPrice;
+    private BigDecimal price;
     private int quantity;
-    private double totalPrice;
-    private String chefId;
+    private BigDecimal totalPrice;
+    private String idChef;
+    private String imageUrl;
 
-    public double calculateTotalPrice() {
-        return this.unitPrice * this.quantity;
+    public BigDecimal calculateTotalPrice() {
+        return this.price.multiply(BigDecimal.valueOf(this.quantity));
     }
 }
