@@ -107,6 +107,9 @@ public class CartService {
         cartRepository.deleteByUserId(userId);
     }
 
+
+    //notif
+
     public void checkout(String userId) {
         Optional<Cart> optionalCart = getCartByUserId(userId);
         if (optionalCart.isPresent()) {

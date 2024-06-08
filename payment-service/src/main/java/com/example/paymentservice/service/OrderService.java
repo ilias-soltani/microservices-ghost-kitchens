@@ -57,6 +57,8 @@ public class OrderService {
         return orderRepository.findByChefId(chefId);
     }
 
+    // notif
+
     public Order updateOrderStatus(String orderId, String statusChef) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
         if (optionalOrder.isPresent()) {
@@ -94,6 +96,8 @@ public class OrderService {
         throw new RuntimeException("Order not found");
     }
 
+    // notif
+
     private void updateStatusOfOrder(Order order) {
         if ("rejected".equals(order.getStatusChef())) {
             order.setStatusOfOrder("rejected");
@@ -130,5 +134,28 @@ public class OrderService {
     }
 
 
+
+    public Order updateOrderAdresse(String orderId, String adresse) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+            order.setAdresse(adresse);
+            return orderRepository.save(order);
+        }
+        throw new RuntimeException("Order not found");
+    }
+
+
+    //notif
+
+    public Order updateOrderStatusToEnLivraison(String orderId) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+            order.setStatusOfOrder("en Livraison");
+            return orderRepository.save(order);
+        }
+        throw new RuntimeException("Order not found");
+    }
 
 }

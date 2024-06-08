@@ -42,4 +42,6 @@ public class Order {
     private String statusAgence;
 
     private String statusOfOrder;
+
+    private String adresse;
 }

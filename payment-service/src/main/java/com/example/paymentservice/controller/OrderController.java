@@ -152,4 +152,21 @@ public class OrderController {
         List<Order> orders = orderService.getNonGroupedOrdersByUserId(userId);
         return ResponseEntity.ok(orders);
     }
+
+
+    @PutMapping("/{orderId}/adresse")  // New endpoint
+    public ResponseEntity<Order> updateOrderAdresse(@PathVariable String orderId, @RequestParam String adresse,@RequestHeader("Authorization") String token) {
+        VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"client"}));
+        Order updatedOrder = orderService.updateOrderAdresse(orderId, adresse);
+        return ResponseEntity.ok(updatedOrder);
+    }
+
+    @PutMapping("/{orderId}/en-livraison")  // New endpoint to update statusOfOrder to "en Livraison"
+    public ResponseEntity<Order> updateOrderStatusToEnLivraison(@PathVariable String orderId,@RequestHeader("Authorization") String token) {
+        VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"chef"}));
+        Order updatedOrder = orderService.updateOrderStatusToEnLivraison(orderId);
+        return ResponseEntity.ok(updatedOrder);
+    }
+
+
 }
