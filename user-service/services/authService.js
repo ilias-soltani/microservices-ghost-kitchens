@@ -154,4 +154,13 @@ exports.getUser = asyncHandler(async (req, res, next) => {
   res.status(200).json({ data: user });
 });
 
+/*
+@desc   Get User
+@route  GET /profile/
+@acess  Private
+*/
+exports.getMe = asyncHandler(async (req, res, next) => {
+  res.status(200).json({ data: req.user });
+});
+
 

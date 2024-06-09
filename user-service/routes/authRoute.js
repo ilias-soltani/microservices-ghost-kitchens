@@ -5,7 +5,8 @@ const {
   login,
   signupChef,
   uploadChefImages,
-    getUser
+    getUser,
+    getMe
 } = require("../services/authService");
 const {
   signupValidation,
@@ -13,6 +14,8 @@ const {
   signupChefValidation,
     getUserValidation
 } = require("../validations/authValidation");
+const {auth, access} = require("../middlewares/authMiddleware");
+
 
 const router = express.Router();
 
@@ -32,5 +35,7 @@ router.get("", (req, res) => {
 router.post("/login/:role", loginValidation, login);
 
 router.get("/user/:id", getUserValidation, getUser);
+
+router.get("/profile", auth, getMe);
 
 module.exports = router;
