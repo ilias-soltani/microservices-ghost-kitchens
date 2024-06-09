@@ -24,4 +24,6 @@ public class OrderDTO {
     private String chefId;
     private String statusChef;
 
+    private String adresse;
+
 }

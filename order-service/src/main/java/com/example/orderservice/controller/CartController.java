@@ -85,13 +85,13 @@ public class CartController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/checkout")
-    public ResponseEntity<Void> checkout(@RequestHeader("Authorization") String token) {
+    @PostMapping("/checkout/{adresse}")
+    public ResponseEntity<Void> checkout(@PathVariable  String adresse,@RequestHeader("Authorization") String token) {
         VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"client"}));
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode responseBody = objectMapper.valueToTree(response.getUser());
         String userId = responseBody.get("_id").asText();
-        cartService.checkout(userId);
+        cartService.checkout(userId,adresse);
         return ResponseEntity.ok().build();
     }
 }

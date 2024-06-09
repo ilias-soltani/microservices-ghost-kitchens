@@ -32,6 +32,9 @@ public class Cart {
 
     private boolean paid;
 
+    private BigDecimal totalPriceCart = BigDecimal.ZERO;;
+
+
     public Cart(String userId) {
         this.userId = userId;
         this.products = new ArrayList<>();
@@ -39,7 +42,9 @@ public class Cart {
 
     public void addProduct(Product product) {
         this.products.add(product);
+        updateTotalPrice();
     }
+
 
     public void updateProduct(Product product) {
         for (Product p : products) {
@@ -50,9 +55,17 @@ public class Cart {
                 break;
             }
         }
+        updateTotalPrice();
     }
 
     public void removeProduct(String productId) {
         products.removeIf(p -> p.getId().equals(productId));
+        updateTotalPrice();
+    }
+
+    private void updateTotalPrice() {
+        this.totalPriceCart = products.stream()
+                .map(Product::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
