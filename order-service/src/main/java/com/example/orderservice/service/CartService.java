@@ -110,7 +110,7 @@ public class CartService {
 
     //notif
 
-    public void checkout(String userId) {
+    public void checkout(String userId, String adresse) {
         Optional<Cart> optionalCart = getCartByUserId(userId);
         if (optionalCart.isPresent()) {
             Cart cart = optionalCart.get();
@@ -139,6 +139,7 @@ public class CartService {
                 order.setGrouped(false); // Indicates individual order
                 order.setChefId(chefId); // Set chefId
                 order.setStatusChef("invalide");
+                order.setAdresse(adresse);
                 paymentClient.createOrder(order);
             });
 
@@ -186,6 +187,7 @@ public class CartService {
                         .reduce(BigDecimal.ZERO, BigDecimal::add));
                 groupedOrder.setGrouped(true); // Indicates grouped order
                 groupedOrder.setChefId("grouped"); // Use "grouped" for grouped orders
+                groupedOrder.setAdresse(adresse);
                 paymentClient.createOrder(groupedOrder);
             }
 

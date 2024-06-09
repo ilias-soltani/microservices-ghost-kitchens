@@ -27,6 +27,7 @@ public class OrderService {
         order.setChefId(orderDTO.getChefId());
         order.setAgenceId(orderDTO.getAgenceId());
         order.setStatusAgence(orderDTO.getStatusAgence());
+        order.setAdresse(orderDTO.getAdresse());
         updateStatusOfOrder(order);
         return orderRepository.save(order);
     }
@@ -153,6 +154,16 @@ public class OrderService {
         if (optionalOrder.isPresent()) {
             Order order = optionalOrder.get();
             order.setStatusOfOrder("en Livraison");
+            return orderRepository.save(order);
+        }
+        throw new RuntimeException("Order not found");
+    }
+
+    public Order updateOrderStatusToDelivered(String orderId) {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+            order.setStatusOfOrder("livré");
             return orderRepository.save(order);
         }
         throw new RuntimeException("Order not found");
