@@ -4,7 +4,7 @@ services:
 
   ## Eureka Server
   discovery-server:
-    image: discovery-image
+    image: iliassoltani/discovery-image:latest
     container_name: discovery-server
     ports:
       - "8888:8888"
@@ -12,7 +12,7 @@ services:
 
   ## Api Gateway Server
   api-gateway:
-    image: api-gateway-image
+    image: iliassoltani/api-gateway-image:latest
     depends_on:
       - discovery-server
     container_name: api-gateway
@@ -60,7 +60,7 @@ services:
   ## Formation Service Server (for test)
   formation-service:
     build: /ms-formation/
-    image: msformation-image
+    image: iliassoltani/msformation-image:latest
     container_name: formation-service
     depends_on:
       - discovery-server
@@ -73,7 +73,7 @@ services:
   ## Category Service Server
   category-service:
     build: /category-service/
-    image: category-image
+    image: iliassoltani/category-image:latest
     container_name: category-service
     depends_on:
       - discovery-server
