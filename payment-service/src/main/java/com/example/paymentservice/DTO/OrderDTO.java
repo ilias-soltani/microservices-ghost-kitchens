@@ -28,4 +28,6 @@ public class OrderDTO {
     private String statusAgence;
 
     private String adresse;
+
+    private String imageUrl;
 }

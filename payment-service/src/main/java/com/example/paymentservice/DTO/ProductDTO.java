@@ -20,4 +20,5 @@ public class ProductDTO {
     private int quantity;
     private BigDecimal totalPrice;
     private String idChef;
+    private String imageUrl;
 }

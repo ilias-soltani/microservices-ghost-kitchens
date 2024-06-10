@@ -94,7 +94,7 @@ public class OrderController {
     // New endpoint for updating statusAgence
     @PutMapping("/{orderId}/status-agence")
     public ResponseEntity<Order> updateStatusAgence(@PathVariable String orderId, @RequestParam String statusAgence,@RequestHeader("Authorization") String token) {
-        VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"agence"}));
+        VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"agency"}));
         Order updatedOrder = orderService.updateStatusAgence(orderId, statusAgence);
         return ResponseEntity.ok(updatedOrder);
     }
@@ -113,7 +113,7 @@ public class OrderController {
 
     @GetMapping("/{orderId}")
     public ResponseEntity<Order> getOrderById(@PathVariable String orderId,@RequestHeader("Authorization") String token) {
-        VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"client","chef","agence"}));
+        VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"client","chef","agency"}));
         Optional<Order> order = orderService.getOrderById(orderId);
         return order.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -122,7 +122,7 @@ public class OrderController {
 
     @GetMapping("/agence")
     public ResponseEntity<List<Order>> getOrdersByAgenceId(@RequestHeader("Authorization") String token) {
-        VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"agence"}));
+        VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"agency"}));
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode responseBody = objectMapper.valueToTree(response.getUser());
         String agenceId = responseBody.get("_id").asText();
@@ -135,7 +135,7 @@ public class OrderController {
 
     @GetMapping("/user/status/{statusOrder}")
     public ResponseEntity<List<Order>> getNonGroupedOrdersByStatusOrderForUser(@PathVariable String statusOrder,@RequestHeader("Authorization") String token) {
-        VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"client"}));
+        VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"client","chef", "agency"}));
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode responseBody = objectMapper.valueToTree(response.getUser());
         String userId = responseBody.get("_id").asText();
@@ -162,7 +162,8 @@ public class OrderController {
     }
 
     @PutMapping("/{orderId}/delivered")
-    public ResponseEntity<Order> markOrderAsDelivered(@PathVariable String orderId) {
+    public ResponseEntity<Order> markOrderAsDelivered(@PathVariable String orderId,@RequestHeader("Authorization") String token) {
+        VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"chef"}));
         Order updatedOrder = orderService.updateOrderStatusToDelivered(orderId);
         return ResponseEntity.ok(updatedOrder);
     }

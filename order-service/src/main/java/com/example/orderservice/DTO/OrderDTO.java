@@ -26,4 +26,6 @@ public class OrderDTO {
 
     private String adresse;
 
+    private String imageUrl;
+
 }

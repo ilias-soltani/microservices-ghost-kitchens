@@ -42,7 +42,7 @@ spec:
         app: user-service
     spec:
       containers:
-        - image: iliassoltani/userservice-image:latest
+        - image: iliassoltani/user-image:latest
           name: user-service
           ports:
             - containerPort: 8000
