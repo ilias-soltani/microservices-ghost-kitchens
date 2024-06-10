@@ -1,5 +1,6 @@
 package com.programmingtechie.productservice.service;
 
+import com.programmingtechie.productservice.client.WishlistClient;
 import com.programmingtechie.productservice.dto.ProductRequest;
 import com.programmingtechie.productservice.dto.ProductResponse;
 import com.programmingtechie.productservice.model.Product;
@@ -23,6 +24,8 @@ public class ProductService {
     private final ProductRepository productRepository;
     @Autowired
     private GoogleDriveService googleDriveService;
+
+    private final WishlistClient wishlistClient;
 
 
     public void createProduct(ProductRequest productRequest, MultipartFile imageFile, String idChef)  throws IOException  {
@@ -114,6 +117,7 @@ public class ProductService {
 
         productRepository.delete(product);
         log.info("Product {} is deleted", productId);
+        wishlistClient.removeProductFromAllWishlists(productId);
     }
 
     public void updateProduct(String productId, ProductRequest productRequest, MultipartFile imageFile) throws IOException {

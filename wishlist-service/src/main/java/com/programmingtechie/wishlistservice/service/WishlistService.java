@@ -83,5 +83,17 @@ public class WishlistService {
         return wishlist;
     }
 
+    public void removeProductFromAllWishlists(String productId) {
+        List<Wishlist> wishlists = wishlistRepository.findAll();
+        for (Wishlist wishlist : wishlists) {
+            wishlist.getItems().removeIf(item -> item.getProductId().equals(productId));
+            if (wishlist.getItems().isEmpty()) {
+                wishlistRepository.delete(wishlist);
+            } else {
+                wishlistRepository.save(wishlist);
+            }
+        }
+    }
+
 
 }

@@ -53,5 +53,10 @@ public class WishlistController {
         return wishlistService.removeItemFromWishlist(userId, productId);
     }
 
+    @DeleteMapping("/product/{productId}")
+    public void removeProductFromAllWishlists(@PathVariable String productId) {
+        wishlistService.removeProductFromAllWishlists(productId);
+    }
+
 
 }
