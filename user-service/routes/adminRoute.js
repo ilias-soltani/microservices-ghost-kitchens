@@ -24,6 +24,6 @@ router.post("/update-chef-status/:id", auth, access("admin"), updateChefStatusVa
 router.post("/update-chef-payment-status/:id", auth, access("admin"),
     updateChefPaymentStatusValidation, updateChefPaymnet);
 
-router.get("/users", auth, access("admin"), getUsers);
+router.get("/users", auth, access("admin", "chef", "agency"), getUsers);
 
 module.exports =router;
