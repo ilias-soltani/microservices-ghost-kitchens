@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.math.BigDecimal;
 
-@FeignClient(name = "product-service", url = "http://localhost:8080/api/product")
+@FeignClient(name = "product-service")
 public interface ProductClient {
 
-    @GetMapping("/{productId}")
+    @GetMapping("/api/product/{productId}")
     ProductResponse getProductById(@PathVariable String productId);
 
     @Data
