@@ -195,5 +195,22 @@ public class CartService {
             deleteCart(userId);
         }
     }
+
+
+    public void removeProductFromAllCarts(String productId) {
+        // Retrieve all carts from the repository
+        List<Cart> allCarts = cartRepository.findAll();
+
+        for (Cart cart : allCarts) {
+            // Remove the product from the cart
+            cart.removeProduct(productId);
+
+            // Update the total price of the cart
+            cart.updateTotalPrice();
+
+            // Save the updated cart back to the repository
+            cartRepository.save(cart);
+        }
+    }
 }
 

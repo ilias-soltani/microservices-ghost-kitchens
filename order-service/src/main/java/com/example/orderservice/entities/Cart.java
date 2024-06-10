@@ -45,7 +45,6 @@ public class Cart {
         updateTotalPrice();
     }
 
-
     public void updateProduct(Product product) {
         for (Product p : products) {
             if (p.getId().equals(product.getId())) {
@@ -63,7 +62,7 @@ public class Cart {
         updateTotalPrice();
     }
 
-    private void updateTotalPrice() {
+    public void updateTotalPrice() {
         this.totalPriceCart = products.stream()
                 .map(Product::getTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
