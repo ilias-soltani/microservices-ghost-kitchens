@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: wishlist-service
+  name: wishlist-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wishlist-service
+  strategy: {}
+  template:
+    metadata:
+
+      labels:
+        app: wishlist-service
+    spec:
+      containers:
+        - env:
+            - name: profile
+              value: "default"
+            - name: eureka.client.serviceUrl.defaultZone
+              value: "http://discovery-server:8888/eureka"
+            - name: eureka.instance.hostname
+              value: "wishlist-service"
+            - name: eureka.instance.preferIpAddress
+              value: "true"
+          image: iliassoltani/wishlist-image:latest
+          name: wishlist-service
+          ports:
+            - containerPort: 8082
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: wishlist-service
+  name: wishlist-service
+spec:
+  ports:
+    - port: 8082
+      targetPort: 8082
+  selector:
+    app: wishlist-service
+

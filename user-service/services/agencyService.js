@@ -35,7 +35,7 @@ exports.createAgency = asyncHandler(async (req, res, next) => {
     await sendEmail(
         {
             to: user.email,
-            subject: `${user.name}, welcome to Buy it!`,
+            subject: `${user.name}, welcome to Ghost Kitchen`,
             template: `welcome`,
         },
         {

@@ -35,7 +35,7 @@ exports.updateChefStatus = asyncHandler(async (req, res, next) =>{
         await sendEmail(
             {
                 to: chef.email,
-                subject: `${chef.name}, welcome to Buy it!`,
+                subject: `${chef.name}, welcome to Ghost Kitchen!`,
                 template: `welcome`,
             },
             {

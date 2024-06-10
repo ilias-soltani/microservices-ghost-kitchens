@@ -44,4 +44,6 @@ public class Order {
     private String statusOfOrder;
 
     private String adresse;
+    private String imageUrl;
+
 }
