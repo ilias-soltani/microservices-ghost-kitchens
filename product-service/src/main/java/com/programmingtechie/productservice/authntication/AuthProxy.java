@@ -10,4 +10,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public interface AuthProxy {
     @PostMapping("/api/v1/jwt/verify-token")
     VerifyTokenResponse verifyToken(@RequestHeader("Authorization") String token, @RequestBody VerifyTokenRequest request);
+
+
+
 }

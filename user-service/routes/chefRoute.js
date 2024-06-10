@@ -21,6 +21,6 @@ router.post("/payment", auth, access("chef"), payment);
 
 router.get("/restaurant", auth, access("chef"), getChefRestaurant);
 
-router.get("/restaurant/:id", auth, access("admin"), getUserValidation, getChefRestaurantByIdChef);
+router.get("/restaurant/:id", getUserValidation, getChefRestaurantByIdChef);
 
 module.exports = router;

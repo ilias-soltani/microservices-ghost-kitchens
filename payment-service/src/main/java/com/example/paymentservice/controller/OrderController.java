@@ -135,7 +135,7 @@ public class OrderController {
 
     @GetMapping("/user/status/{statusOrder}")
     public ResponseEntity<List<Order>> getNonGroupedOrdersByStatusOrderForUser(@PathVariable String statusOrder,@RequestHeader("Authorization") String token) {
-        VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"client"}));
+        VerifyTokenResponse response = authProxy.verifyToken(token, new VerifyTokenRequest(new String[]{"client","chef", "agency"}));
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode responseBody = objectMapper.valueToTree(response.getUser());
         String userId = responseBody.get("_id").asText();
