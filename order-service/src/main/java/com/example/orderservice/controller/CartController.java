@@ -94,4 +94,11 @@ public class CartController {
         cartService.checkout(userId,adresse);
         return ResponseEntity.ok().build();
     }
+
+
+    @DeleteMapping("/product/{productId}")
+    public ResponseEntity<Void> removeProductFromAllCarts(@PathVariable String productId) {
+        cartService.removeProductFromAllCarts(productId);
+        return ResponseEntity.noContent().build();
+    }
 }
