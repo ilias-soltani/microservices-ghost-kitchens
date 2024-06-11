@@ -26,7 +26,7 @@ spec:
               value: "payment-service"
             - name: eureka.instance.preferIpAddress
               value: "true"
-          image: iliassoltani/wishlist-image:latest
+          image: iliassoltani/payment-image:latest
           name: payment-service
           ports:
             - containerPort: 8084
@@ -42,5 +42,5 @@ spec:
     - port: 8084
       targetPort: 8084
   selector:
-    app: order-service
+    app: payment-service
 

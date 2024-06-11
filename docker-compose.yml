@@ -57,19 +57,6 @@ services:
 
 
 
-  ## Formation Service Server (for test)
-  formation-service:
-    build: /ms-formation/
-    image: iliassoltani/msformation-image:latest
-    container_name: formation-service
-    depends_on:
-      - discovery-server
-      - api-gateway
-    environment:
-      profile: "default"
-      eureka.client.serviceUrl.defaultZone: "http://discovery-server:8888/eureka"
-
-
   ## Category Service Server
   category-service:
     build: /category-service/
@@ -85,7 +72,7 @@ services:
   ## Product Service Server
   product-service:
     build: /product-service/
-    image: product-image
+    image: iliassoltani/product-image:latest
     container_name: product-service
     depends_on:
       - discovery-server
@@ -111,7 +98,7 @@ services:
   ## Order Service Server
   order-service:
     build: /order-service/
-    image: order-image
+    image: iliassoltani/order-image:latest
     container_name: order-service
     depends_on:
       - discovery-server
@@ -124,7 +111,7 @@ services:
   ## Payment Service Server
   payment-service:
     build: /payment-service/
-    image: payment-image
+    image: iliassoltani/payment-image:latest
     container_name: payment-service
     depends_on:
       - discovery-server

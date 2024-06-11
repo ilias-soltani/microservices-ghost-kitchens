@@ -26,7 +26,7 @@ spec:
               value: "product-service"
             - name: eureka.instance.preferIpAddress
               value: "true"
-          image: iliassoltani/wishlist-image:latest
+          image: iliassoltani/product-image:latest
           name: product-service
           ports:
             - containerPort: 8080
